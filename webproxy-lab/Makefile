@@ -13,11 +13,14 @@ all: proxy
 csapp.o: csapp.c csapp.h
 	$(CC) $(CFLAGS) -c csapp.c
 
-proxy.o: proxy.c csapp.h
-	$(CC) $(CFLAGS) -c proxy.c
+util/log.o: util/log.c util/log.h
+	$(CC) $(CFLAGS) -c util/log.c -o util/log.o
 
-proxy: proxy.o csapp.o
-	$(CC) $(CFLAGS) proxy.o csapp.o -o proxy $(LDFLAGS).
+proxy.o: proxy.c csapp.h util/log.h
+	$(CC) $(CFLAGS) -Iutil -c proxy.c
+
+proxy: proxy.o csapp.o util/log.o
+	$(CC) $(CFLAGS) proxy.o csapp.o util/log.o -o proxy $(LDFLAGS)
 
 # Echo server/client targets
 echo.o: echo.c csapp.h
@@ -49,5 +52,5 @@ handin:
 	(make clean; cd ..; tar cvf $(USER)-proxylab-handin.tar proxylab-handout --exclude tiny --exclude nop-server.py --exclude proxy --exclude driver.sh --exclude port-for-user.pl --exclude free-port.sh --exclude ".*")
 
 clean:
-	rm -f *~ *.o proxy echoserveri echoclient core *.tar *.zip *.gzip *.bzip *.gz
+	rm -f *~ *.o util/*.o proxy echoserveri echoclient core *.tar *.zip *.gzip *.bzip *.gz
 
