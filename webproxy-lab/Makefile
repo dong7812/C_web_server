@@ -16,11 +16,17 @@ csapp.o: csapp.c csapp.h
 util/log.o: util/log.c util/log.h
 	$(CC) $(CFLAGS) -c util/log.c -o util/log.o
 
-proxy.o: proxy.c csapp.h util/log.h
+proxy.o: proxy.c csapp.h util/log.h cache2.h
 	$(CC) $(CFLAGS) -Iutil -c proxy.c
 
-proxy: proxy.o csapp.o util/log.o
-	$(CC) $(CFLAGS) proxy.o csapp.o util/log.o -o proxy $(LDFLAGS)
+cache.o: cache.c cache.h csapp.h util/log.h
+	$(CC) $(CFLAGS) -Iutil -c cache.c
+
+cache2.o: cache2.c cache2.h csapp.h util/log.h
+	$(CC) $(CFLAGS) -Iutil -c cache2.c
+
+proxy: proxy.o csapp.o util/log.o cache2.o
+	$(CC) $(CFLAGS) proxy.o csapp.o util/log.o cache2.o -o proxy $(LDFLAGS)
 
 # Echo server/client targets
 echo.o: echo.c csapp.h
